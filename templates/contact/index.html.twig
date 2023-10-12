@@ -11,4 +11,60 @@
     </div>
 
     {# Le tableau listant les données #}
+    {% if contacts|length ==0 %}
+    <p class="text-center mt-5" >Aucun Contact ajouté a la liste </p>
+    {% else %}
+        <table class="table table-striped table-hover table-bordered" >
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Prénom</th>
+                    <th>Nom </th>
+                    <th>Email</th>
+                    <th>Numéro de téléphone</th>
+                    <th> Commentaire</th>
+                    <th>Créer le </th>
+                    <th>Modifié le  </th>
+                    <th>Options </th>
+                </tr>
+            </thead>
+            <tbody>
+            
+            {% for contact in contacts %}
+                <tr>
+                    <td>{{contact.id}}</td>
+                    <td>{{contact.firstName}}</td>
+                    <td>{{contact.lastName}}</td>
+                    <td>{{contact.email}}</td>
+                    <td> {{contact.phone}}</td>
+                    <td>{{contact.comment}}</td>   
+                    <td>{{contact.createdAt|format_datetime()}}</td>   
+                    <td>{{contact.updatedAt|format_datetime()}}</td> 
+                    <td>
+                    <a class="btn btn-sm btn-secondary" href="{{path('app.edit',{'id': contact.id})}}">Modifier</a>
+                    <form class="d-inline" method="POST" action="{{path('app.delete',{'id':contact.id})}}">
+                        <input type="hidden" name="csrf_token" value="{{csrf_token('delete_contact'~contact.id)}}">
+                        <input onclick="return confirm('confirmez la supression')" type="submit" class="btn btn-sm btn-danger" value="supprimer">
+                    </form>
+                    </td> 
+                      
+                </tr>
+
+
+            {% endfor %}
+            
+            
+            
+            
+            
+            <tbody>
+        
+        
+        
+        
+        
+        </table>
+
+    {% endif %}
+    
 {% endblock %}

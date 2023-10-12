@@ -8,4 +8,11 @@ use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
+    
+    public function __construct(string $appEnv, bool $appDebug)
+    {
+        date_default_timezone_set("Europe/Paris");
+        parent::__construct($appEnv, $appDebug);
+    }
+
 }

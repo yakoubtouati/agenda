@@ -6,7 +6,10 @@ use App\Repository\ContactRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+
+#[UniqueEntity('email',message:"Ce contact existe déja")]
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
 class Contact
 {
@@ -15,19 +18,64 @@ class Contact
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message:"Le prénom est obligatoire")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'Le prénom ne doit dépasser {{ limit }} caractéres.',
+    )]
+    #[Assert\Regex(
+        pattern: "/^[0-9a-zA-Z-_' áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]+$/i",
+        match: true,
+        message: 'Veuillez entrez un prénom valide',
+    )]
     #[ORM\Column(length: 255)]
     private ?string $firstName = null;
+    
 
+    #[Assert\NotBlank(message:"Le Nom est obligatoire")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'Le Nom ne doit dépasser {{ limit }} caractéres.',
+    )]
+    #[Assert\Regex(
+        pattern: "/^[0-9a-zA-Z-_' áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]+$/i",
+        match: true,
+        message: 'Veuillez entrez un Nom valide',
+    )]
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
+    
 
+
+    #[Assert\NotBlank(message:"L'email est obligatoire")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'L\'email ne doit dépasser {{ limit }} caractéres.',
+    )]
+    #[Assert\Email(
+        message: 'L\'email {{ value }} n\'est pas valide ',
+    )]
     #[ORM\Column(length: 100,unique:true)]
     private ?string $email = null;
+    
 
+    #[Assert\NotBlank(message:"Le numero de telephone  est obligatoire")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'Le numéro de téléphone ne doit pas dépasser  {{ limit }} caractéres.',
+    )]
+    #[Assert\Regex(
+        pattern: "/^[0-9\-\+\s\(\)]{6,30}$/", 
+        match: true,
+        message: 'Le numéro de téléphone n\'est pas valide ',
+    )]
     #[ORM\Column(length: 255)]
     private ?string $phone = null;
-
+    
+    #[Assert\Length(
+        max: 1000,
+        maxMessage: 'Le commentaire ne doit pas dépasser  {{ limit }} caractéres.',
+    )]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $comment = null;
 
